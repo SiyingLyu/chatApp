@@ -1,0 +1,55 @@
+import javax.swing.*;
+import java.awt.FlowLayout;
+import java.io.*;
+import java.net.Socket;
+public class Client {
+	// GUI part
+	static JFrame chatWindow = new JFrame("Chat Application");
+	static JTextArea chatArea = new JTextArea(22, 38); // size of chat area (row, col)
+	static JTextField textField = new JTextField(38);
+	static JLabel blankLabel = new JLabel("           ");
+	static JButton sendButton = new JButton("Send");
+	// function part
+	static BufferedReader in;
+	static PrintWriter out;
+	
+	public Client() {
+		chatWindow.setLayout(new FlowLayout());
+		chatWindow.add(new JScrollPane(chatArea));
+		chatWindow.add(blankLabel);
+		chatWindow.add(textField);
+		chatWindow.add(sendButton);
+		chatWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		chatWindow.setSize(475, 500);
+		chatWindow.setVisible(true);
+		// before server connected
+		textField.setEditable(false);	
+		chatArea.setEditable(false);
+	}
+	
+	public void startChat() throws Exception {
+		/**
+		 * ask the user to enter the IP address of the server (dialog pops)
+		 */
+		String ipAddress = JOptionPane.showInputDialog(
+				chatWindow,
+				"Enter IP Address:",
+				"IP Address Required!!",
+				JOptionPane.PLAIN_MESSAGE);  
+		Socket soc = new Socket(ipAddress, 9806);
+		in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+		out = new PrintWriter(soc.getOutputStream(), true);
+		
+		while (true) {
+			
+		}
+	}
+	
+	public static void main(String[] args) throws Exception {
+		/**
+		 * Create GUI here
+		 */
+		Client client = new Client();
+		client.startChat();
+	}
+}

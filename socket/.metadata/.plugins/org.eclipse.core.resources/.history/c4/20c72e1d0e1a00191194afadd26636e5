@@ -1,0 +1,58 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
+public class Client {
+	public static void main(String[] args) throws Exception{
+		System.out.println("Client start");
+		Socket soc = new Socket("localhost", 9800);
+		/***
+		 * for the parameter input from user
+		 */
+		BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+		/**
+		 * read data from socket
+		 */
+		BufferedReader in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+		/**
+		 * send to server
+		 */
+		PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
+		
+		/**
+		 * display a menu to user
+		 */
+		int option = 0;
+		int num1 = 0;
+		int num2 = 0;
+		do {
+			System.out.println("Choose an operation:");
+			System.out.println("1. Addition");
+			System.out.println("2. Subtraction");
+			System.out.println("3. Multiplication");
+			System.out.println("4. Division");
+			System.out.println("5. Exit");
+			System.out.println("Enter an option: ");
+			option = Integer.parseInt(userInput.readLine());
+			
+			if (option == 5) {
+				out.println(option+":0.0");
+				break;
+			} else {
+				System.out.println("Enter first number");
+				num1 = Integer.parseInt(userInput.readLine());
+				
+				System.out.println("Enter second number");
+				num2 = Integer.parseInt(userInput.readLine());
+				
+				out.println(option+":"+num1+":"+num2); // the format we send the data in a whole string
+				
+				String ans = in.readLine();
+				System.out.println("Server says:"+ans);
+				System.out.println();
+			}
+			
+		} while (true); // kept display and update to user
+	}
+}

@@ -1,0 +1,46 @@
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Server {
+	public static void main(String[] args) throws Exception {
+		System.out.println("Waiting for clients...");
+		ServerSocket ss = new ServerSocket(9806);
+		
+		while(true) {
+			Socket soc = ss.accept();
+			System.out.println("Connection established");
+			/***
+			 * multi-client threads: one thread
+			 */
+			ConversitionHandler handler = new ConversitionHandler(soc);
+			handler.start();
+		}
+	}
+}
+
+class ConversitionHandler extends Thread{
+	/***
+	 * on this socket, the thread is created
+	 */
+	Socket socket;
+	BufferedReader in;
+	PrintWriter out;
+	
+	public ConversitionHandler(Socket socket) throws IOException {
+		this.socket = socket;
+	}
+	
+	public void run() {
+		/**
+		 * thread logic
+		 */
+		try {
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			out = new PrintWriter(socket.getOutputStream(), true);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+}
